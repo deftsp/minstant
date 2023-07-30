@@ -6,6 +6,8 @@ use std::{
 };
 use web_time::{SystemTime, UNIX_EPOCH};
 
+use bytemuck::NoUninit;
+
 /// A measurement of a monotonically nondecreasing clock. Similar to
 /// [`std::time::Instant`](std::time::Instant) but is faster and more
 /// accurate if TSC is available.
@@ -228,7 +230,8 @@ impl std::fmt::Debug for Instant {
 /// An anchor which can be used to convert internal clocking counter into system timestamp.
 ///
 /// *[See also the `Instant::as_unix_nanos()`](crate::Instant::as_unix_nanos).*
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, NoUninit)]
+#[repr(C)]
 pub struct Anchor {
     unix_time_ns: u64,
     cycle: u64,
